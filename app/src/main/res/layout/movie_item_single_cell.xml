@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/movie_item_single_cell"
+    android:layout_margin="10dp"
+    android:layout_height="231dp">
+
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="130dp"
+        android:layout_height="193dp"
+        android:id="@+id/poster_cell"
+        app:layout_constraintTop_toTopOf="parent"
+        app:cardCornerRadius="20dp"
+        android:elevation="16dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent">
+
+        <ImageView
+            android:src="@color/black"
+            android:id="@+id/poster_path"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+    </androidx.cardview.widget.CardView>
+
+    <com.google.android.material.textview.MaterialTextView
+        app:layout_constraintTop_toTopOf="@id/poster_cell"
+        app:layout_constraintLeft_toRightOf="@id/poster_cell"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="20dp"
+        android:text="The Spiderman"
+        android:textSize="18sp"
+        android:fontFamily="@font/assistant_bold"
+        android:textColor="@color/text_color"
+        android:id="@+id/movie_name"
+        android:layout_width="230dp"
+        android:maxLines="2"
+        android:layout_height="wrap_content"/>
+    <ImageView
+        app:layout_constraintTop_toBottomOf="@id/movie_name"
+        app:layout_constraintLeft_toRightOf="@id/poster_cell"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="20dp"
+        android:layout_width="20dp"
+        android:id="@+id/ic_star"
+        android:layout_height="20dp"
+        android:src="@drawable/ic_star"/>
+
+    <com.google.android.material.textview.MaterialTextView
+        app:layout_constraintTop_toBottomOf="@id/movie_name"
+        app:layout_constraintLeft_toRightOf="@id/ic_star"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="20dp"
+        android:id="@+id/avg_vote"
+        android:layout_width="wrap_content"
+        android:fontFamily="@font/assistant_semi_bold"
+        android:text="5.4"
+        android:layout_height="wrap_content"/>
+</androidx.constraintlayout.widget.ConstraintLayout>
