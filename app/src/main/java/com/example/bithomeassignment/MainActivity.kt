@@ -8,8 +8,8 @@ import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import com.example.bithomeassignment.repository.DataRepository
 import com.example.bithomeassignment.repository.SettingsRepository
-import com.example.bithomeassignment.view_model.MovieListViewModel
 import com.example.bithomeassignment.view_model.AppViewModelFactory
+import com.example.bithomeassignment.view_model.MovieListViewModel
 
 
 /**
@@ -53,7 +53,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     // Function to add fragment with or without bundle
-    fun addFragment(navResId: Int, bundle: Bundle) {
+    fun addFragment(navResId: Int, bundle: Bundle?) {
         try {
             _navigationController.navigate(navResId, bundle)
         } catch (e: Exception) {

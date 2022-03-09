@@ -30,7 +30,7 @@ interface ApiService {
     ): MovieList
 
     /**
-     * Function to get movies by upcoming
+     * Function to get movies by Upcoming
      * */
 
     @GET("movie/upcoming?language=en-US")

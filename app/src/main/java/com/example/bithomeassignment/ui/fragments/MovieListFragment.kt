@@ -12,6 +12,7 @@ import com.example.bithomeassignment.R
 import com.example.bithomeassignment.adapters.MovieListAdapter
 import com.example.bithomeassignment.databinding.FragmentMovieListBinding
 import com.example.bithomeassignment.models.Movie
+import com.example.bithomeassignment.utils.AppUtils
 import com.example.bithomeassignment.utils.LoggerUtils
 import com.example.bithomeassignment.view_model.MovieListViewModel
 import com.getbase.floatingactionbutton.FloatingActionButton
@@ -19,7 +20,7 @@ import com.getbase.floatingactionbutton.FloatingActionsMenu
 
 class MovieListFragment : BaseFragment(), MovieListAdapter.OnItemClicked, View.OnClickListener {
     private val TAG = this::class.java.simpleName.toString()
-    lateinit var _binding: FragmentMovieListBinding
+    private lateinit var _binding: FragmentMovieListBinding
     lateinit var _extendedFab: FloatingActionsMenu
     lateinit var _topRatedFab: FloatingActionButton
     lateinit var _nowPlayingFab: FloatingActionButton
@@ -82,7 +83,9 @@ class MovieListFragment : BaseFragment(), MovieListAdapter.OnItemClicked, View.O
     }
 
     override fun onMovieClicked(movie: Movie) {
-        LoggerUtils.info(TAG, movie.toString())
+        val b = Bundle()
+        b.putString("movie_overview", movie.overview)
+        mainActivity.addFragment(R.id.action_movieListFragment_to_movieDetailsFragment, b)
     }
 
     override fun onClick(p0: View?) {
@@ -91,27 +94,22 @@ class MovieListFragment : BaseFragment(), MovieListAdapter.OnItemClicked, View.O
                 _extendedFab.expand()
             }
             R.id.top_rated -> {
-                // TODO: Add logic to get from server
                 _extendedFab.collapse()
                 _movieListViewModel.getMoviesByTopRatedFromServer(1)
-                LoggerUtils.shortToast(requireContext(), "Top rated")
             }
             R.id.now_playing -> {
-                // TODO: Add logic to get from server
                 _extendedFab.collapse()
-                _movieListViewModel.getMoviesByNowPlayingFromServer("2022-03-09", "2022-03-09")
-                LoggerUtils.shortToast(requireContext(), "Now playing")
+                val date = AppUtils.getDate()
+                LoggerUtils.shortToast(requireContext(),date.toString())
+                _movieListViewModel.getMoviesByNowPlayingFromServer(date.toString(), date.toString())
             }
             R.id.upcoming -> {
-                // TODO: Add logic to get from server
                 _extendedFab.collapse()
                 _movieListViewModel.getMoviesByUpcomingFromServer(1)
-                LoggerUtils.shortToast(requireContext(), "Upcoming")
             }
             R.id.favorites -> {
-                // TODO: Add logic to get from server
+                LoggerUtils.shortToast(requireContext(),"Favorites -> Todo")
                 _extendedFab.collapse()
-                LoggerUtils.shortToast(requireContext(), "Favorites")
             }
         }
     }

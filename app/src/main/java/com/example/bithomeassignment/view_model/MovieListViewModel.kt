@@ -14,18 +14,21 @@ import kotlinx.coroutines.launch
  * NetanelCA2@gmail.com
  */
 //app viewModel
-class MovieListViewModel(var dataRepository: IDataRepository, _settingsRepository: ISettingsRepository) :
+class MovieListViewModel(_dataRepository: IDataRepository, _settingsRepository: ISettingsRepository) :
     ViewModel() {
     private val TAG = this::class.simpleName.toString()
-    private var settingsRepository:ISettingsRepository = _settingsRepository
+    private var dataRepository: IDataRepository = _dataRepository
+    private val settingsRepository: ISettingsRepository = _settingsRepository
+
+    /*  private var settingsRepository: ISettingsRepository = _settingsRepository*/
     var _movieList = MutableLiveData<List<Movie>>()
 
     //Method to retrieve movies from Server
-    fun getAllMoviesFromServer(pageNum:Int) {
+    fun getAllMoviesFromServer(pageNum: Int) {
         viewModelScope.launch {
             _movieList.value = dataRepository.getAllMoviesFromServer(pageNum).movies
         }
-        LoggerUtils.info(TAG,"getMoviesByPopularityFromServer")
+        LoggerUtils.info(TAG, "getMoviesByPopularityFromServer")
 
     }
 

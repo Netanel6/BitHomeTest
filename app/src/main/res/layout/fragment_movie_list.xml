@@ -20,7 +20,7 @@
 
     <com.getbase.floatingactionbutton.FloatingActionsMenu
         android:id="@+id/extended_fab"
-        android:layout_width="56dp"
+        android:layout_width="wrap_content"
         android:layout_height="56dp"
         android:layout_marginEnd="16dp"
         android:layout_marginBottom="16dp"
@@ -34,6 +34,12 @@
             app:fab_colorPressed="@color/white"
             app:fab_icon="@drawable/ic_top_rated" />
 
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/assistant_semi_bold"
+            android:text="Top rated"/>
+
         <com.getbase.floatingactionbutton.FloatingActionButton
             android:id="@+id/now_playing"
             android:layout_width="wrap_content"
@@ -41,6 +47,12 @@
             app:fab_colorPressed="@color/white"
             app:fab_icon="@drawable/ic_now_playing"
             app:fab_title="Now playing" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/assistant_semi_bold"
+            android:text="Now playing"/>
 
         <com.getbase.floatingactionbutton.FloatingActionButton
             android:id="@+id/upcoming"
@@ -50,6 +62,12 @@
             app:fab_icon="@drawable/ic_upcoming"
             app:fab_title="Upcoming" />
 
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/assistant_semi_bold"
+            android:text="Upcoming"/>
+
         <com.getbase.floatingactionbutton.FloatingActionButton
             android:id="@+id/favorites"
             android:layout_width="wrap_content"
@@ -57,6 +75,13 @@
             app:fab_colorPressed="@color/white"
             app:fab_icon="@drawable/ic_favorites"
             app:fab_title="Favorites" />
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/assistant_semi_bold"
+            android:text="Favorites"/>
 
     </com.getbase.floatingactionbutton.FloatingActionsMenu>
 
