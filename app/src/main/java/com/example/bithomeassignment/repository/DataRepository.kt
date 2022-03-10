@@ -23,25 +23,8 @@ class DataRepository(context: Context, settingsRepository: SettingsRepository, n
         _networkManager = networkManager
     }
 
-    override suspend fun getAllMoviesFromServer(pageNum: Int): MovieList {
-        return _networkManager.getAllData(pageNum)
+    override suspend fun getAllMoviesFromServer(endPoint:String,pageNum: Int): MovieList {
+        return _networkManager.getAllData(endPoint,pageNum)
     }
 
-    override suspend fun getMoviesByTopRatedFromServer(pageNum: Int): MovieList{
-        return _networkManager.getByTopRated(pageNum)
-
-    }
-
-    override suspend fun getMoviesByUpcomingFromServer(pageNum: Int): MovieList {
-        return _networkManager.getByUpcoming(pageNum)
-
-    }
-
-    override suspend fun getMoviesByNowPlayingFromServer(
-        startReleaseDate: String,
-        endReleaseDate: String,
-    ): MovieList {
-        return _networkManager.getByNowPlaying(startReleaseDate,endReleaseDate)
-
-    }
 }

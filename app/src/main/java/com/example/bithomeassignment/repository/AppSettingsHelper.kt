@@ -13,11 +13,13 @@ object AppSettingsHelper {
 
     private val PREFS_NAME = "${AppSettingsHelper::class.simpleName.toString()}.app_prefs"
     private val PREF_IS_DATA_RETRIEVED = AppSettingsHelper::class.java.simpleName + ".is_data_retrieved"
+    private val PREF_IS_HAVE_INTERNET = AppSettingsHelper::class.java.simpleName + ".is_have_internet"
 
     /**
      * Defaults
      */
     private const val IS_DATA_RETRIEVED_DEFAULT = false
+    private const val IS_HAVE_INTERNET_DEFAULT = false
 
     fun getSharedPref(context: Context): SharedPreferences? {
         return context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
@@ -30,4 +32,7 @@ object AppSettingsHelper {
     fun setIsDataRetrieved(prefs: SharedPreferences, isRetrieved: Boolean) {
         prefs.edit().putBoolean(PREF_IS_DATA_RETRIEVED, isRetrieved).apply()
     }
+
+
+
 }

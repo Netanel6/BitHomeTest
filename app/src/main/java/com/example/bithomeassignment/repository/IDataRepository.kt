@@ -8,8 +8,5 @@ import com.example.bithomeassignment.models.MovieList
  */
 //Interface that implemented in the data repository
 interface IDataRepository {
-    suspend fun getAllMoviesFromServer(pageNum:Int):MovieList
-    suspend fun getMoviesByTopRatedFromServer(pageNum:Int):MovieList
-    suspend fun getMoviesByUpcomingFromServer(pageNum:Int):MovieList
-    suspend fun getMoviesByNowPlayingFromServer(startReleaseDate:String, endReleaseDate:String):MovieList
+    suspend fun getAllMoviesFromServer(endPoint:String, pageNum:Int):MovieList
 }

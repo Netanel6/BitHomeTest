@@ -3,6 +3,7 @@ package com.example.bithomeassignment.view_model
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.bithomeassignment.models.Movie
 import com.example.bithomeassignment.repository.IDataRepository
 import com.example.bithomeassignment.repository.ISettingsRepository
@@ -20,44 +21,59 @@ class MovieListViewModel(_dataRepository: IDataRepository, _settingsRepository: 
     private var dataRepository: IDataRepository = _dataRepository
     private val settingsRepository: ISettingsRepository = _settingsRepository
 
-    /*  private var settingsRepository: ISettingsRepository = _settingsRepository*/
+    private var _movieListScrollPosition = 0
+    val _loading = MutableLiveData(false)
+    private val _hasInternet = MutableLiveData(false)
+    private val _pageNum = MutableLiveData(1)
     var _movieList = MutableLiveData<List<Movie>>()
 
     //Method to retrieve movies from Server
-    fun getAllMoviesFromServer(pageNum: Int) {
+    fun getAllMoviesFromServer(endPoint:String, pageNum: Int) {
         viewModelScope.launch {
-            _movieList.value = dataRepository.getAllMoviesFromServer(pageNum).movies
+            _movieList.value = dataRepository.getAllMoviesFromServer(endPoint,pageNum).movies
         }
-        LoggerUtils.info(TAG, "getMoviesByPopularityFromServer")
-
+        LoggerUtils.info(TAG, "getAllMoviesFromServer")
     }
 
-    //Method to retrieve movies from Server by top rated
-    fun getMoviesByTopRatedFromServer(pageNum:Int) {
+    // Gets the next page of the current endPoint
+    fun nextPage(currentEndPoint:String,layoutManager: LinearLayoutManager) {
         viewModelScope.launch {
-            _movieList.value = dataRepository.getMoviesByTopRatedFromServer(pageNum).movies
-        }
-        LoggerUtils.info(TAG,"getMoviesByPopularityFromServer")
+            if ((_movieListScrollPosition + 1) >= _pageNum.value!!) {
+                _loading.value = true
+                incrementPage()
+                LoggerUtils.info(TAG, "nextPage: triggered: ${_pageNum.value}")
 
+
+                if (_pageNum.value!! > 1) {
+                    val result = dataRepository.getAllMoviesFromServer(currentEndPoint,_pageNum.value!!)
+                    LoggerUtils.info(TAG, "movies: appending")
+                    appendMovies(result.movies, layoutManager)
+                }
+                _loading.value = false
+            }
+        }
     }
 
-    //Method to retrieve movies from Server by upcoming
-    fun getMoviesByUpcomingFromServer(pageNum:Int) {
-        viewModelScope.launch {
-            _movieList.value = dataRepository.getMoviesByUpcomingFromServer(pageNum).movies
-        }
-        LoggerUtils.info(TAG,"getMoviesByUpcomingFromServer")
-
+   // Add new movies to the list when the user reaches the end of the recycler view
+    private fun appendMovies(movies: List<Movie>, linearLayoutManager: LinearLayoutManager) {
+        val current = ArrayList(_movieList.value)
+        current.addAll(movies)
+        this._movieList.value = current
+        _movieListScrollPosition += 1
+        linearLayoutManager.scrollToPosition(current.size - 24)
     }
 
-    //Method to retrieve data from Server
-    fun getMoviesByNowPlayingFromServer(startReleaseDate:String, endReleaseDate:String) {
-        viewModelScope.launch {
-            // TODO: Change to start date and end date dynamically
-            _movieList.value = dataRepository.getMoviesByNowPlayingFromServer(startReleaseDate,endReleaseDate).movies
-        }
-        LoggerUtils.info(TAG,"getMoviesByNowPlayingFromServer")
-
+    // Increment the current page by 1
+    private fun incrementPage() {
+        _pageNum.value = _pageNum.value?.plus(1)
     }
 
+    // Sets the network state of the internet
+    fun setNetworkState(hasInternet: Boolean) {
+        this._hasInternet.value = hasInternet
+    }
+    // Gets the network state of the internet
+    fun getNetworkState(): MutableLiveData<Boolean> {
+        return _hasInternet
+    }
 }

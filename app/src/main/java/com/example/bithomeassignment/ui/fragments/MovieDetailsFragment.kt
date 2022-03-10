@@ -10,6 +10,7 @@ import com.example.bithomeassignment.R
 import com.example.bithomeassignment.databinding.FragmentMovieDetailsBinding
 
 class MovieDetailsFragment : BaseFragment() {
+
     private val TAG = this::class.java.simpleName.toString()
     private lateinit var _binding: FragmentMovieDetailsBinding
     private lateinit var test: TextView
@@ -19,6 +20,9 @@ class MovieDetailsFragment : BaseFragment() {
     ): View {
         _binding = FragmentMovieDetailsBinding.inflate(inflater, container, false)
         return _binding.root
+    }
+
+    override fun observeNetworkState() {
     }
 
     override fun onFragmentReady() {
@@ -36,7 +40,6 @@ class MovieDetailsFragment : BaseFragment() {
     }
 
     override fun initClicks() {
-        // TODO: Init Clicks
     }
 
 

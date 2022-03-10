@@ -22,6 +22,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var _settingsRepository: SettingsRepository
     private lateinit var _movieListViewModel: MovieListViewModel
     private lateinit var _navigationController: NavController
+    private lateinit var _connectionLiveData: ConnectionLiveData
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,10 +35,13 @@ class MainActivity : AppCompatActivity() {
     private fun initAppSettings() {
         _settingsRepository = SettingsRepository(this)
         _dataRepository = DataRepository(this, _settingsRepository, NetworkManager())
-        // TODO: Add hilt di
         val factory = AppViewModelFactory(_dataRepository, _settingsRepository)
         _movieListViewModel = ViewModelProvider(this,
             (factory as ViewModelProvider.Factory))[MovieListViewModel::class.java]
+        _connectionLiveData = ConnectionLiveData(this)
+        _connectionLiveData.observe(this) { hasInternet ->
+            _movieListViewModel.setNetworkState(hasInternet)
+        }
         initNavController()
     }
 
@@ -50,6 +54,11 @@ class MainActivity : AppCompatActivity() {
     // Function to get viewModel to whole over the app with one instance
     fun getMovieListViewModel(): MovieListViewModel {
         return _movieListViewModel
+    }
+
+    // Function to get settingsRepository to whole over the app with one instance
+    fun getSettingsRepository(): SettingsRepository {
+        return _settingsRepository
     }
 
     // Function to add fragment with or without bundle

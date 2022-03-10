@@ -4,10 +4,9 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.ImageView
-import android.widget.RatingBar
-import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.example.bithomeassignment.MainActivity
 import com.example.bithomeassignment.databinding.MovieItemSingleCellBinding
 import com.example.bithomeassignment.models.Movie
@@ -20,7 +19,6 @@ import com.google.android.material.textview.MaterialTextView
  * Created by Netanel Amar on 08/03/2022.
  * NetanelCA2@gmail.com
  */
-// TODO: Add lazy loading!
 class MovieListAdapter(
     private val activity:MainActivity,
     private val values: List<Movie>,
@@ -42,9 +40,10 @@ class MovieListAdapter(
         holder.itemView.setOnClickListener {
             onItemClicked.onMovieClicked(dataAtPosition)
         }
-        Glide.with(activity).load("${Constants.IMAGE_PATH}${dataAtPosition.posterPath}").into(holder.posterPath)
+        Glide.with(activity).load("${Constants.IMAGE_PATH}${dataAtPosition.posterPath}")
+            .diskCacheStrategy(
+                DiskCacheStrategy.ALL).into(holder.posterPath)
         holder.voteAvg.text = String.format("%s/10", dataAtPosition.voteAverage.toString())
-
     }
 
     override fun getItemCount(): Int {
@@ -61,6 +60,3 @@ class MovieListAdapter(
         fun onMovieClicked(movie:Movie)
     }
 }
-
-
-/**/
