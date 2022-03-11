@@ -20,29 +20,38 @@ class MovieListViewModel(_dataRepository: IDataRepository, _settingsRepository: 
     private val TAG = this::class.simpleName.toString()
     private var dataRepository: IDataRepository = _dataRepository
     private val settingsRepository: ISettingsRepository = _settingsRepository
-
     private var _movieListScrollPosition = 0
     val _loading = MutableLiveData(false)
     private val _hasInternet = MutableLiveData(false)
     private val _pageNum = MutableLiveData(1)
     var _movieList = MutableLiveData<List<Movie>>()
+    val _movie = MutableLiveData<Movie>()
+
+    // Sets the network state of the internet
+    fun setNetworkState(hasInternet: Boolean) {
+        this._hasInternet.value = hasInternet
+    }
+
+    // Gets the network state of the internet
+    fun getNetworkState(): MutableLiveData<Boolean> {
+        return _hasInternet
+    }
 
     //Method to retrieve movies from Server
-    fun getAllMoviesFromServer(endPoint:String, pageNum: Int) {
+    fun getAllMoviesFromServer(endPoint: String, pageNum: Int) {
         viewModelScope.launch {
-            _movieList.value = dataRepository.getAllMoviesFromServer(endPoint,pageNum).movies
+            _movieList.value = dataRepository.getAllMoviesFromServer(endPoint, pageNum).movies
         }
         LoggerUtils.info(TAG, "getAllMoviesFromServer")
     }
 
     // Gets the next page of the current endPoint
-    fun nextPage(currentEndPoint:String,layoutManager: LinearLayoutManager) {
+    fun nextPage(currentEndPoint: String, layoutManager: LinearLayoutManager) {
         viewModelScope.launch {
             if ((_movieListScrollPosition + 1) >= _pageNum.value!!) {
                 _loading.value = true
                 incrementPage()
                 LoggerUtils.info(TAG, "nextPage: triggered: ${_pageNum.value}")
-
 
                 if (_pageNum.value!! > 1) {
                     val result = dataRepository.getAllMoviesFromServer(currentEndPoint,_pageNum.value!!)
@@ -56,24 +65,26 @@ class MovieListViewModel(_dataRepository: IDataRepository, _settingsRepository: 
 
    // Add new movies to the list when the user reaches the end of the recycler view
     private fun appendMovies(movies: List<Movie>, linearLayoutManager: LinearLayoutManager) {
-        val current = ArrayList(_movieList.value)
+       val current = ArrayList(_movieList.value!!)
         current.addAll(movies)
-        this._movieList.value = current
-        _movieListScrollPosition += 1
-        linearLayoutManager.scrollToPosition(current.size - 24)
-    }
+       this._movieList.value = current
+       _movieListScrollPosition += 1
+       linearLayoutManager.scrollToPosition(current.size - 24)
+   }
 
     // Increment the current page by 1
     private fun incrementPage() {
         _pageNum.value = _pageNum.value?.plus(1)
     }
 
-    // Sets the network state of the internet
-    fun setNetworkState(hasInternet: Boolean) {
-        this._hasInternet.value = hasInternet
+
+    // Sets the selected movie for details fragment
+     fun setSelectedMovie(movie: Movie) {
+        this._movie.value = movie
     }
-    // Gets the network state of the internet
-    fun getNetworkState(): MutableLiveData<Boolean> {
-        return _hasInternet
+
+    // Gets the selected movie for details fragment
+    fun getSelectedMovie():MutableLiveData<Movie> {
+        return _movie
     }
 }

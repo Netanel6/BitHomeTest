@@ -9,6 +9,7 @@ import android.widget.ProgressBar
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.bithomeassignment.BaseFragment
+import com.example.bithomeassignment.MainActivity
 import com.example.bithomeassignment.R
 import com.example.bithomeassignment.adapters.MovieListAdapter
 import com.example.bithomeassignment.databinding.FragmentMovieListBinding
@@ -16,10 +17,9 @@ import com.example.bithomeassignment.models.Movie
 import com.example.bithomeassignment.network.Constants
 import com.example.bithomeassignment.utils.LoggerUtils
 import com.example.bithomeassignment.view_model.MovieListViewModel
-import com.getbase.floatingactionbutton.FloatingActionButton
-import com.getbase.floatingactionbutton.FloatingActionsMenu
 
-class MovieListFragment : BaseFragment(), MovieListAdapter.OnItemClicked, View.OnClickListener {
+class MovieListFragment : BaseFragment(), MovieListAdapter.OnItemClicked,
+    MainActivity.OnNavItemSelected {
 
 
     private val TAG = this::class.java.simpleName.toString()
@@ -27,11 +27,6 @@ class MovieListFragment : BaseFragment(), MovieListAdapter.OnItemClicked, View.O
     private lateinit var _recyclerView: RecyclerView
     private lateinit var layoutManager: LinearLayoutManager
     private lateinit var _moviesAdapter: MovieListAdapter
-    private lateinit var _extendedFab: FloatingActionsMenu
-    private lateinit var _topRatedFab: FloatingActionButton
-    private lateinit var _nowPlayingFab: FloatingActionButton
-    private lateinit var _upcomingFab: FloatingActionButton
-    private lateinit var _favoritesFab: FloatingActionButton
     private lateinit var _progressBar: ProgressBar
     var _hasInternet: Boolean = false
     lateinit var _currentEndPoint: String
@@ -52,15 +47,11 @@ class MovieListFragment : BaseFragment(), MovieListAdapter.OnItemClicked, View.O
         _recyclerView = _binding.movieListRv
         layoutManager = LinearLayoutManager(requireContext())
         _recyclerView.layoutManager = layoutManager
-        _extendedFab = _binding.extendedFab
-        _topRatedFab = _binding.topRated
-        _nowPlayingFab = _binding.nowPlaying
-        _upcomingFab = _binding.upcoming
-        _favoritesFab = _binding.favorites
         _progressBar = _binding.progressBar
     }
 
     override fun onFragmentReady() {
+        mainActivity.setOnNavItemSelected(this)
         recyclerViewFirstAnim()
         _currentEndPoint = Constants.LATEST
         observeLoadingProgress()
@@ -68,14 +59,12 @@ class MovieListFragment : BaseFragment(), MovieListAdapter.OnItemClicked, View.O
 
     // Observer to identify if there is internet connection
     override fun observeNetworkState() {
-        mainActivity.getMovieListViewModel().getNetworkState().observe(this) { hasInternet ->
-            if (hasInternet) {
+        _movieListViewModel.getNetworkState().observe(this) { hasInternet ->
+            _hasInternet = if (hasInternet) {
                 observeMovieList(_currentEndPoint)
-                _hasInternet = true
-                LoggerUtils.shortToast(requireContext(), hasInternet.toString())
+                true
             } else {
-                _hasInternet = false
-                LoggerUtils.shortToast(requireContext(), hasInternet.toString())
+                false
             }
         }
     }
@@ -124,49 +113,45 @@ class MovieListFragment : BaseFragment(), MovieListAdapter.OnItemClicked, View.O
     }
 
     override fun initClicks() {
-        _extendedFab.setOnClickListener(this)
-        _topRatedFab.setOnClickListener(this)
-        _nowPlayingFab.setOnClickListener(this)
-        _upcomingFab.setOnClickListener(this)
-        _favoritesFab.setOnClickListener(this)
     }
 
     override fun onMovieClicked(movie: Movie) {
-        val b = Bundle()
-        b.putString("movie_overview", movie.overview)
-        mainActivity.addFragment(R.id.action_movieListFragment_to_movieDetailsFragment, b)
+        _movieListViewModel.setSelectedMovie(movie)
+        mainActivity.hideBottomView()
+        mainActivity.addFragment(R.id.action_movieListFragment_to_movieDetailsFragment, null)
     }
 
-    override fun onClick(p0: View?) {
-        when (p0!!.id) {
-            R.id.extended_fab -> {
-                _extendedFab.expand()
+
+    private fun getMoviesOnClick(currentEndPoint: String) {
+        _currentEndPoint = currentEndPoint
+    }
+
+    override fun screenNum(screenNum: Int) {
+        when (screenNum) {
+            1 -> {
+                if (!_hasInternet) return
+                getMoviesOnClick(Constants.LATEST)
+                _movieListViewModel.getAllMoviesFromServer(_currentEndPoint, 1)
             }
-            R.id.top_rated -> {
+            2 -> {
                 if (!_hasInternet) return
                 getMoviesOnClick(Constants.TOP_RATED)
                 _movieListViewModel.getAllMoviesFromServer(_currentEndPoint, 1)
             }
-            R.id.now_playing -> {
+            3 -> {
                 if (!_hasInternet) return
                 getMoviesOnClick(Constants.NOW_PLAYING)
                 _movieListViewModel.getAllMoviesFromServer(_currentEndPoint, 1)
             }
-            R.id.upcoming -> {
+            4 -> {
                 if (!_hasInternet) return
                 getMoviesOnClick(Constants.UPCOMING)
                 _movieListViewModel.getAllMoviesFromServer(_currentEndPoint, 1)
             }
-            R.id.favorites -> {
-                if (!_hasInternet) return
-                LoggerUtils.shortToast(requireContext(), "Favorites -> Todo")
-                _extendedFab.collapse()
+            5 -> {
+//                _movieListViewModel.fromLocalDb("", 1)
+
             }
         }
-    }
-
-    private fun getMoviesOnClick(currentEndPoint: String) {
-        _extendedFab.collapse()
-        _currentEndPoint = currentEndPoint
     }
 }

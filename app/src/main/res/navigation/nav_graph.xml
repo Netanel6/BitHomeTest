@@ -17,6 +17,9 @@
             app:enterAnim="@animator/enter_animation"
             app:exitAnim="@animator/exit_animation"
             />
+        <action
+            android:id="@+id/action_movieListFragment_self"
+            app:destination="@id/movieListFragment" />
     </fragment>
 
 

@@ -1,5 +1,7 @@
 package com.example.bithomeassignment.network
 
+import com.example.bithomeassignment.R
+
 /**
  * Created by Netanel Amar on 07/03/2022.
  * NetanelCA2@gmail.com
@@ -7,6 +9,7 @@ package com.example.bithomeassignment.network
 // constant class to hold the api base url and the api key
 class Constants {
     companion object{
+        // Server
         const val API_KEY = "f7ad2715006291578ee90cb5a6c64eb2"
         const val BASE_URL = "https://api.themoviedb.org/3/"
         const val IMAGE_PATH = "https://image.tmdb.org/t/p/original/"
