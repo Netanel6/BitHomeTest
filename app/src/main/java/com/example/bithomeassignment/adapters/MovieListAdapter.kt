@@ -42,15 +42,15 @@ class MovieListAdapter(
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val dataAtPosition = values[position]
         holder.movieName.text = dataAtPosition.title
-        holder.itemView.setOnClickListener {
-            onItemClicked.onMovieClicked(dataAtPosition)
-        }
         AppUtils.loadImage(activity = activity, imagePath = "${Constants.IMAGE_PATH}${dataAtPosition.posterPath}",holder = holder.posterPath)
         holder.voteAvg.text = AppUtils.formatString(data = dataAtPosition.voteAverage.toString())
         if (!inFavorites){
             holder.favorite.setOnClickListener {
                 holder.favorite.setImageDrawable(AppCompatResources.getDrawable(activity, R.drawable.ic_favorite))
                 onItemClicked.onFavoriteClicked(dataAtPosition)
+            }
+            holder.itemView.setOnClickListener {
+                onItemClicked.onMovieClicked(dataAtPosition)
             }
         }else{
             holder.favorite.setImageDrawable(AppCompatResources.getDrawable(activity, R.drawable.ic_favorite))
