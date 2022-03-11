@@ -2,6 +2,10 @@ package com.example.bithomeassignment.utils
 
 import android.view.View
 import android.view.animation.TranslateAnimation
+import android.widget.ImageView
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
+import com.example.bithomeassignment.MainActivity
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -41,5 +45,17 @@ object AppUtils {
         animate.duration = 500
         animate.fillAfter = true
         view.startAnimation(animate)
+    }
+
+    fun loadImage(activity: MainActivity, imagePath: String, holder: ImageView) {
+        Glide.with(activity).load(imagePath)
+            .diskCacheStrategy(
+                DiskCacheStrategy.ALL).into(holder)
+    }
+
+    fun formatString(data: String) :String{
+        var formattedString = data
+        formattedString = String.format("%s/10", data)
+        return formattedString
     }
 }

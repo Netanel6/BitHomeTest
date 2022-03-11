@@ -4,13 +4,17 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.ImageView
+import androidx.appcompat.content.res.AppCompatResources
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.example.bithomeassignment.MainActivity
+import com.example.bithomeassignment.R
 import com.example.bithomeassignment.databinding.MovieItemSingleCellBinding
 import com.example.bithomeassignment.models.Movie
 import com.example.bithomeassignment.network.Constants
+import com.example.bithomeassignment.utils.AppUtils
+import com.example.bithomeassignment.utils.LoggerUtils
 import com.google.android.material.textview.MaterialTextView
 
 
@@ -40,10 +44,12 @@ class MovieListAdapter(
         holder.itemView.setOnClickListener {
             onItemClicked.onMovieClicked(dataAtPosition)
         }
-        Glide.with(activity).load("${Constants.IMAGE_PATH}${dataAtPosition.posterPath}")
-            .diskCacheStrategy(
-                DiskCacheStrategy.ALL).into(holder.posterPath)
-        holder.voteAvg.text = String.format("%s/10", dataAtPosition.voteAverage.toString())
+        AppUtils.loadImage(activity = activity, imagePath = "${Constants.IMAGE_PATH}${dataAtPosition.posterPath}",holder = holder.posterPath)
+        holder.voteAvg.text = AppUtils.formatString(data = dataAtPosition.voteAverage.toString())
+        holder.favorite.setOnClickListener {
+            holder.favorite.setImageDrawable(AppCompatResources.getDrawable(activity, R.drawable.ic_favorite))
+            onItemClicked.onFavoriteClicked(dataAtPosition)
+        }
     }
 
     override fun getItemCount(): Int {
@@ -53,10 +59,12 @@ class MovieListAdapter(
     class ViewHolder(binding: MovieItemSingleCellBinding) : RecyclerView.ViewHolder(binding.root) {
         val movieName: MaterialTextView = binding.movieName
         val posterPath: ImageView = binding.posterPath
+        val favorite: ImageView = binding.addToFavorite
         val voteAvg: MaterialTextView = binding.avgVote
     }
 
     interface OnItemClicked {
         fun onMovieClicked(movie:Movie)
+        fun onFavoriteClicked(movie:Movie)
     }
 }

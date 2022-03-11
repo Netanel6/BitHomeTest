@@ -121,6 +121,10 @@ class MovieListFragment : BaseFragment(), MovieListAdapter.OnItemClicked,
         mainActivity.addFragment(R.id.action_movieListFragment_to_movieDetailsFragment, null)
     }
 
+    override fun onFavoriteClicked(movie: Movie) {
+        _movieListViewModel.addMovieToLocalDb(movie)
+    }
+
 
     private fun getMoviesOnClick(currentEndPoint: String) {
         _currentEndPoint = currentEndPoint

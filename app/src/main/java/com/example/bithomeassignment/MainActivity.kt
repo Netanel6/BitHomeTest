@@ -121,7 +121,7 @@ class MainActivity : AppCompatActivity(), NavigationBarView.OnItemSelectedListen
     }
 
     // Sets the interface listener to the designated fragment which is implemented OnNavItemSelected
-    fun setOnNavItemSelected(onNavItemSelected: OnNavItemSelected) {
+    fun setOnNavItemSelected(onNavItemSelected: OnNavItemSelected?) {
         this.onNavItemSelected = onNavItemSelected
     }
 

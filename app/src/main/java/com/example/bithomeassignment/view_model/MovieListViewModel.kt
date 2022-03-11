@@ -8,6 +8,8 @@ import com.example.bithomeassignment.models.Movie
 import com.example.bithomeassignment.repository.IDataRepository
 import com.example.bithomeassignment.repository.ISettingsRepository
 import com.example.bithomeassignment.utils.LoggerUtils
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.launch
 
 /**
@@ -77,6 +79,13 @@ class MovieListViewModel(_dataRepository: IDataRepository, _settingsRepository: 
         _pageNum.value = _pageNum.value?.plus(1)
     }
 
+    fun addMovieToLocalDb(movie: Movie){
+        // Using IO dispatcher to prevent from UI locking and crashing the app or ANR
+        // ANR -> Application Not Responding
+        CoroutineScope(IO).launch {
+            dataRepository.addMovieToLocaldb(movie)
+        }
+    }
 
     // Sets the selected movie for details fragment
      fun setSelectedMovie(movie: Movie) {

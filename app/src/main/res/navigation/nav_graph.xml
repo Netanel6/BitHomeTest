@@ -14,8 +14,8 @@
         <action
             android:id="@+id/action_movieListFragment_to_movieDetailsFragment"
             app:destination="@id/movieDetailsFragment"
-            app:enterAnim="@animator/enter_animation"
-            app:exitAnim="@animator/exit_animation"
+            app:enterAnim="@animator/slide_out_animation"
+            app:exitAnim="@animator/slide_in_animation"
             />
         <action
             android:id="@+id/action_movieListFragment_self"
@@ -31,8 +31,8 @@
         <action
             android:id="@+id/action_movieDetailsFragment_to_movieListFragment"
             app:destination="@id/movieListFragment"
-            app:enterAnim="@animator/slide_out_animation"
-            app:exitAnim="@animator/slide_in_animation"/>
+            app:enterAnim="@animator/enter_animation"
+            app:exitAnim="@animator/exit_animation"/>
     </fragment>
 </navigation>
 

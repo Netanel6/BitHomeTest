@@ -1,5 +1,6 @@
 package com.example.bithomeassignment.repository
 
+import com.example.bithomeassignment.models.Movie
 import com.example.bithomeassignment.models.MovieList
 
 /**
@@ -9,4 +10,5 @@ import com.example.bithomeassignment.models.MovieList
 //Interface that implemented in the data repository
 interface IDataRepository {
     suspend fun getAllMoviesFromServer(endPoint:String, pageNum:Int):MovieList
+    suspend fun addMovieToLocaldb(movie: Movie)
 }
