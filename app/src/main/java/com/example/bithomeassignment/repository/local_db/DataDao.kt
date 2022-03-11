@@ -1,8 +1,10 @@
 package com.example.bithomeassignment.repository.local_db
 
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.room.Dao
 import androidx.room.Insert
+import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import com.example.bithomeassignment.models.Movie
 
@@ -15,8 +17,8 @@ import com.example.bithomeassignment.models.Movie
 interface DataDao {
 
     @Query("SELECT * FROM movie")
-    fun getData():LiveData<List<Movie>>
+    fun getData():List<Movie>
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insert(data: Movie)
 }

@@ -2,6 +2,8 @@ package com.example.bithomeassignment.repository
 
 import NetworkManager
 import android.content.Context
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import com.example.bithomeassignment.models.Movie
 import com.example.bithomeassignment.models.MovieList
 import com.example.bithomeassignment.repository.local_db.AppDatabase
@@ -31,6 +33,10 @@ class DataRepository(context: Context, settingsRepository: SettingsRepository, n
 
     override suspend fun addMovieToLocaldb(movie: Movie) {
         _database.getMovieDao().insert(movie)
+    }
+
+    override suspend fun getMoviesFromLocalDb(): List<Movie> {
+        return _database.getMovieDao().getData()
     }
 
 }

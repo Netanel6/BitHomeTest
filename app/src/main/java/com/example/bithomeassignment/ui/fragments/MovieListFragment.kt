@@ -29,6 +29,7 @@ class MovieListFragment : BaseFragment(), MovieListAdapter.OnItemClicked,
     private lateinit var _moviesAdapter: MovieListAdapter
     private lateinit var _progressBar: ProgressBar
     var _hasInternet: Boolean = false
+    var inFavorites: Boolean = false
     lateinit var _currentEndPoint: String
     private val _movieListViewModel: MovieListViewModel
         get() {
@@ -55,6 +56,11 @@ class MovieListFragment : BaseFragment(), MovieListAdapter.OnItemClicked,
         recyclerViewFirstAnim()
         _currentEndPoint = Constants.LATEST
         observeLoadingProgress()
+        observeMovieListFromDb()
+    }
+
+    private fun observeMovieListFromDb() {
+
     }
 
     // Observer to identify if there is internet connection
@@ -97,7 +103,7 @@ class MovieListFragment : BaseFragment(), MovieListAdapter.OnItemClicked,
     }
 
     private fun initRecycler(movies: List<Movie>) {
-        _moviesAdapter = MovieListAdapter(mainActivity, movies, this)
+        _moviesAdapter = MovieListAdapter(mainActivity, movies, this,inFavorites)
         _recyclerView.adapter = _moviesAdapter
     }
 
@@ -105,7 +111,7 @@ class MovieListFragment : BaseFragment(), MovieListAdapter.OnItemClicked,
     private fun observeRecyclerScrolling() {
         _recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                if (layoutManager.findLastVisibleItemPosition() == layoutManager.itemCount - 2 && _hasInternet) {
+                if (layoutManager.findLastVisibleItemPosition() == layoutManager.itemCount - 2 && _hasInternet  && !inFavorites) {
                     mainActivity.getMovieListViewModel().nextPage(_currentEndPoint, layoutManager)
                 }
             }
@@ -134,27 +140,31 @@ class MovieListFragment : BaseFragment(), MovieListAdapter.OnItemClicked,
         when (screenNum) {
             1 -> {
                 if (!_hasInternet) return
+                inFavorites = false
                 getMoviesOnClick(Constants.LATEST)
                 _movieListViewModel.getAllMoviesFromServer(_currentEndPoint, 1)
             }
             2 -> {
                 if (!_hasInternet) return
+                inFavorites = false
                 getMoviesOnClick(Constants.TOP_RATED)
                 _movieListViewModel.getAllMoviesFromServer(_currentEndPoint, 1)
             }
             3 -> {
                 if (!_hasInternet) return
+                inFavorites = false
                 getMoviesOnClick(Constants.NOW_PLAYING)
                 _movieListViewModel.getAllMoviesFromServer(_currentEndPoint, 1)
             }
             4 -> {
                 if (!_hasInternet) return
+                inFavorites = false
                 getMoviesOnClick(Constants.UPCOMING)
                 _movieListViewModel.getAllMoviesFromServer(_currentEndPoint, 1)
             }
             5 -> {
-//                _movieListViewModel.fromLocalDb("", 1)
-
+                _movieListViewModel.getDataFromLocalDb()
+                inFavorites = true
             }
         }
     }

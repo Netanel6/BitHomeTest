@@ -10,7 +10,9 @@ import com.example.bithomeassignment.repository.ISettingsRepository
 import com.example.bithomeassignment.utils.LoggerUtils
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers.IO
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 /**
  * Created by Netanel Amar on 07/03/2022.
@@ -79,7 +81,8 @@ class MovieListViewModel(_dataRepository: IDataRepository, _settingsRepository: 
         _pageNum.value = _pageNum.value?.plus(1)
     }
 
-    fun addMovieToLocalDb(movie: Movie){
+    // Saving movie to local DB
+    fun addMovieToLocalDb(movie: Movie) {
         // Using IO dispatcher to prevent from UI locking and crashing the app or ANR
         // ANR -> Application Not Responding
         CoroutineScope(IO).launch {
@@ -87,13 +90,22 @@ class MovieListViewModel(_dataRepository: IDataRepository, _settingsRepository: 
         }
     }
 
+    // Using IO dispatcher to prevent from UI locking and crashing the app or ANR
+    // ANR -> Application Not Responding
+     fun getDataFromLocalDb() {
+        CoroutineScope(IO).launch {
+            _movieList.postValue(dataRepository.getMoviesFromLocalDb())
+        }
+    }
+
     // Sets the selected movie for details fragment
-     fun setSelectedMovie(movie: Movie) {
+    fun setSelectedMovie(movie: Movie) {
         this._movie.value = movie
     }
 
     // Gets the selected movie for details fragment
-    fun getSelectedMovie():MutableLiveData<Movie> {
+    fun getSelectedMovie(): MutableLiveData<Movie> {
         return _movie
     }
+
 }

@@ -1,5 +1,7 @@
 package com.example.bithomeassignment.repository
 
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import com.example.bithomeassignment.models.Movie
 import com.example.bithomeassignment.models.MovieList
 
@@ -11,4 +13,5 @@ import com.example.bithomeassignment.models.MovieList
 interface IDataRepository {
     suspend fun getAllMoviesFromServer(endPoint:String, pageNum:Int):MovieList
     suspend fun addMovieToLocaldb(movie: Movie)
+    suspend fun getMoviesFromLocalDb(): List<Movie>
 }

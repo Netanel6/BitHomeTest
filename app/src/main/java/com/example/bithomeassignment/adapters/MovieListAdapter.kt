@@ -27,6 +27,7 @@ class MovieListAdapter(
     private val activity:MainActivity,
     private val values: List<Movie>,
     private val onItemClicked: OnItemClicked,
+    private val inFavorites:Boolean
 ) : RecyclerView.Adapter<MovieListAdapter.ViewHolder>() {
     val TAG = this::class.java.simpleName.toString()
     var _context: Context? = null
@@ -46,10 +47,15 @@ class MovieListAdapter(
         }
         AppUtils.loadImage(activity = activity, imagePath = "${Constants.IMAGE_PATH}${dataAtPosition.posterPath}",holder = holder.posterPath)
         holder.voteAvg.text = AppUtils.formatString(data = dataAtPosition.voteAverage.toString())
-        holder.favorite.setOnClickListener {
+        if (!inFavorites){
+            holder.favorite.setOnClickListener {
+                holder.favorite.setImageDrawable(AppCompatResources.getDrawable(activity, R.drawable.ic_favorite))
+                onItemClicked.onFavoriteClicked(dataAtPosition)
+            }
+        }else{
             holder.favorite.setImageDrawable(AppCompatResources.getDrawable(activity, R.drawable.ic_favorite))
-            onItemClicked.onFavoriteClicked(dataAtPosition)
         }
+
     }
 
     override fun getItemCount(): Int {

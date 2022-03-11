@@ -12,12 +12,14 @@ import java.lang.reflect.Type
  */
 class Converter {
 
+    // Coverts the list of int from json to Gson and back to List<Int>
     @TypeConverter
     fun listFromInt(value: String?): List<Int?>? {
         val listType: Type = object : TypeToken<List<String?>?>() {}.type
         return Gson().fromJson(value, listType)
     }
 
+    // Converts the List<Int> to gson and to json to handle saving to local db
     @TypeConverter
     fun intFromList(list: List<Int?>?): String? {
         val gson = Gson()
