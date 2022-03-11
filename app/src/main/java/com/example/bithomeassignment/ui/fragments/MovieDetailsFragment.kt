@@ -14,10 +14,10 @@ import com.example.bithomeassignment.R
 import com.example.bithomeassignment.databinding.FragmentMovieDetailsBinding
 import com.example.bithomeassignment.network.Constants
 import com.example.bithomeassignment.utils.AppUtils
+import com.example.bithomeassignment.utils.LoggerUtils
 import com.example.bithomeassignment.view_model.MovieListViewModel
 
-class MovieDetailsFragment : BaseFragment(), MainActivity.OnNavItemSelected {
-
+class MovieDetailsFragment : BaseFragment(){
     private val TAG = this::class.java.simpleName.toString()
     private lateinit var _binding: FragmentMovieDetailsBinding
     private lateinit var _movieName: TextView
@@ -25,14 +25,11 @@ class MovieDetailsFragment : BaseFragment(), MainActivity.OnNavItemSelected {
     private lateinit var _movieYear: TextView
     private lateinit var _moviePhoto: ImageView
     private lateinit var _movieRating: TextView
-
+    private var _hasInternet: Boolean? = null
     private val _movieListViewModel: MovieListViewModel
         get() {
             return mainActivity.getMovieListViewModel()
         }
-    lateinit var _currentEndPoint: String
-    var _hasInternet: Boolean = false
-
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -44,14 +41,26 @@ class MovieDetailsFragment : BaseFragment(), MainActivity.OnNavItemSelected {
 
     override fun observeNetworkState() {
         _movieListViewModel.getNetworkState().observe(this) { hasInternet ->
-            _hasInternet = hasInternet
+            _hasInternet = if (hasInternet) {
+                true
+            } else {
+                LoggerUtils.snackBarError(_binding.root,getString(R.string.no_internet_connection))
+                false
+            }
+
         }
     }
 
-    override fun onFragmentReady() {
-        mainActivity.setOnNavItemSelected(this)
-        observeMovieDetails()
+    override fun initViews() {
+        _movieName = _binding.movieName
+        _movieRating = _binding.movieRating
+        _movieYear = _binding.movieYear
+        _movieDesc = _binding.movieDesc
+        _moviePhoto = _binding.moviePhoto
+    }
 
+    override fun onFragmentReady() {
+        observeMovieDetails()
     }
 
     private fun observeMovieDetails() {
@@ -68,59 +77,6 @@ class MovieDetailsFragment : BaseFragment(), MainActivity.OnNavItemSelected {
         }
     }
 
-    override fun initViews() {
-        _movieName = _binding.movieName
-        _movieRating = _binding.movieRating
-        _movieYear = _binding.movieYear
-        _movieDesc = _binding.movieDesc
-        _moviePhoto = _binding.moviePhoto
-    }
-
     override fun initClicks() {
     }
-
-    private fun getMoviesOnClick(currentEndPoint: String) {
-        _currentEndPoint = currentEndPoint
-    }
-
-    override fun screenNum(screenNum: Int) {
-        when (screenNum) {
-            1 -> {
-                if (!_hasInternet) return
-                getMoviesOnClick(Constants.LATEST)
-                _movieListViewModel.getAllMoviesFromServer(_currentEndPoint, 1)
-                mainActivity.addFragment(R.id.action_movieDetailsFragment_to_movieListFragment,
-                    null)
-
-            }
-            2 -> {
-                if (!_hasInternet) return
-                getMoviesOnClick(Constants.TOP_RATED)
-                _movieListViewModel.getAllMoviesFromServer(_currentEndPoint, 1)
-                mainActivity.addFragment(R.id.action_movieDetailsFragment_to_movieListFragment,
-                    null)
-            }
-            3 -> {
-                if (!_hasInternet) return
-                getMoviesOnClick(Constants.NOW_PLAYING)
-                _movieListViewModel.getAllMoviesFromServer(_currentEndPoint, 1)
-                mainActivity.addFragment(R.id.action_movieDetailsFragment_to_movieListFragment,
-                    null)
-
-            }
-            4 -> {
-                if (!_hasInternet) return
-                getMoviesOnClick(Constants.UPCOMING)
-                _movieListViewModel.getAllMoviesFromServer(_currentEndPoint, 1)
-                mainActivity.addFragment(R.id.action_movieDetailsFragment_to_movieListFragment,
-                    null)
-
-            }
-            5 -> {
-//                _movieListViewModel.fromLocalDb("", 1)
-            }
-        }
-    }
-
-
 }

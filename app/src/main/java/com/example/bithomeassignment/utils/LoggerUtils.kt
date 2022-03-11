@@ -1,6 +1,7 @@
 package com.example.bithomeassignment.utils
 
 import android.content.Context
+import android.graphics.Color
 import android.util.Log
 import android.view.View
 import android.widget.Toast
@@ -27,7 +28,21 @@ object LoggerUtils {
     }
 
     fun snackBar(view: View, msg: String) {
-        val snackbar: Snackbar = Snackbar.make(view, msg, Snackbar.LENGTH_SHORT)
+        val snackbar: Snackbar = Snackbar
+            .make(view, msg, Snackbar.LENGTH_SHORT)
+        snackbar.show()
+    }
+
+    fun snackBarError(view: View, msg: String) {
+        val snackbar = Snackbar
+            .make(view, msg, Snackbar.LENGTH_LONG)
+        snackbar.setTextColor(Color.RED)
+        snackbar.show()
+    }
+
+    fun snackBarInfo(view: View, msg: String) {
+        val snackbar = Snackbar
+            .make(view, msg, Snackbar.LENGTH_LONG)
         snackbar.show()
     }
 }

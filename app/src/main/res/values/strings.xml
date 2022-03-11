@@ -7,4 +7,5 @@
     <string name="nav_upcoming">Upcoming</string>
     <string name="nav_now_playing">Now playing</string>
     <string name="nav_saved">Saved</string>
+    <string name="no_internet_connection">אינך מחובר לאינטרנט</string>
 </resources>

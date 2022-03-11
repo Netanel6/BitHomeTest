@@ -26,7 +26,7 @@ class MovieListViewModel(_dataRepository: IDataRepository, _settingsRepository: 
     private val settingsRepository: ISettingsRepository = _settingsRepository
     private var _movieListScrollPosition = 0
     val _loading = MutableLiveData(false)
-    private val _hasInternet = MutableLiveData(false)
+    private val _hasInternet = MutableLiveData(true)
     private val _pageNum = MutableLiveData(1)
     var _movieList = MutableLiveData<List<Movie>>()
     val _movie = MutableLiveData<Movie>()
@@ -55,11 +55,9 @@ class MovieListViewModel(_dataRepository: IDataRepository, _settingsRepository: 
             if ((_movieListScrollPosition + 1) >= _pageNum.value!!) {
                 _loading.value = true
                 incrementPage()
-                LoggerUtils.info(TAG, "nextPage: triggered: ${_pageNum.value}")
-
+                //Appending page by one
                 if (_pageNum.value!! > 1) {
                     val result = dataRepository.getAllMoviesFromServer(currentEndPoint,_pageNum.value!!)
-                    LoggerUtils.info(TAG, "movies: appending")
                     appendMovies(result.movies, layoutManager)
                 }
                 _loading.value = false

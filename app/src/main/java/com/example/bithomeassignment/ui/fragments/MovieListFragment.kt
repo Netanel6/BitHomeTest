@@ -15,6 +15,7 @@ import com.example.bithomeassignment.adapters.MovieListAdapter
 import com.example.bithomeassignment.databinding.FragmentMovieListBinding
 import com.example.bithomeassignment.models.Movie
 import com.example.bithomeassignment.network.Constants
+import com.example.bithomeassignment.utils.AppUtils
 import com.example.bithomeassignment.utils.LoggerUtils
 import com.example.bithomeassignment.view_model.MovieListViewModel
 
@@ -28,7 +29,7 @@ class MovieListFragment : BaseFragment(), MovieListAdapter.OnItemClicked,
     private lateinit var layoutManager: LinearLayoutManager
     private lateinit var _moviesAdapter: MovieListAdapter
     private lateinit var _progressBar: ProgressBar
-    var _hasInternet: Boolean = false
+    var _hasInternet: Boolean? = null
     var inFavorites: Boolean = false
     lateinit var _currentEndPoint: String
     private val _movieListViewModel: MovieListViewModel
@@ -70,6 +71,7 @@ class MovieListFragment : BaseFragment(), MovieListAdapter.OnItemClicked,
                 observeMovieList(_currentEndPoint)
                 true
             } else {
+                LoggerUtils.snackBarError(_binding.fragment,getString(R.string.no_internet_connection))
                 false
             }
         }
@@ -111,7 +113,7 @@ class MovieListFragment : BaseFragment(), MovieListAdapter.OnItemClicked,
     private fun observeRecyclerScrolling() {
         _recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                if (layoutManager.findLastVisibleItemPosition() == layoutManager.itemCount - 2 && _hasInternet  && !inFavorites) {
+                if (layoutManager.findLastVisibleItemPosition() == layoutManager.itemCount - 2 && _hasInternet!!  && !inFavorites) {
                     mainActivity.getMovieListViewModel().nextPage(_currentEndPoint, layoutManager)
                 }
             }
@@ -128,6 +130,7 @@ class MovieListFragment : BaseFragment(), MovieListAdapter.OnItemClicked,
     }
 
     override fun onFavoriteClicked(movie: Movie) {
+        LoggerUtils.snackBar(_binding.fragment,"${movie.title} Saved")
         _movieListViewModel.addMovieToLocalDb(movie)
     }
 
@@ -139,25 +142,25 @@ class MovieListFragment : BaseFragment(), MovieListAdapter.OnItemClicked,
     override fun screenNum(screenNum: Int) {
         when (screenNum) {
             1 -> {
-                if (!_hasInternet) return
+                if (!_hasInternet!!) return
                 inFavorites = false
                 getMoviesOnClick(Constants.LATEST)
                 _movieListViewModel.getAllMoviesFromServer(_currentEndPoint, 1)
             }
             2 -> {
-                if (!_hasInternet) return
+                if (!_hasInternet!!) return
                 inFavorites = false
                 getMoviesOnClick(Constants.TOP_RATED)
                 _movieListViewModel.getAllMoviesFromServer(_currentEndPoint, 1)
             }
             3 -> {
-                if (!_hasInternet) return
+                if (!_hasInternet!!) return
                 inFavorites = false
                 getMoviesOnClick(Constants.NOW_PLAYING)
                 _movieListViewModel.getAllMoviesFromServer(_currentEndPoint, 1)
             }
             4 -> {
-                if (!_hasInternet) return
+                if (!_hasInternet!!) return
                 inFavorites = false
                 getMoviesOnClick(Constants.UPCOMING)
                 _movieListViewModel.getAllMoviesFromServer(_currentEndPoint, 1)

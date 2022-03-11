@@ -12,7 +12,6 @@ import com.example.bithomeassignment.models.Movie
  * NetanelCA2@gmail.com
 */
 //app db singleton which called in data repository in the constructor and held from there
-
 @Database(entities = [Movie::class], version = 1, exportSchema = false)
 @TypeConverters(Converter::class)
 abstract class AppDatabase : RoomDatabase() {
