@@ -1,4 +1,5 @@
 import com.example.bithomeassignment.models.MovieList
+import com.example.bithomeassignment.models.Trailer
 import com.example.bithomeassignment.network.ApiService
 import com.example.bithomeassignment.network.Constants
 import com.example.bithomeassignment.utils.LoggerUtils
@@ -21,6 +22,11 @@ class NetworkManager {
     suspend fun getAllData(endPoint:String, pageNum: Int): MovieList {
         LoggerUtils.info(TAG,"getAllData")
         return _apiService.getAllMovies(endPoint,Constants.API_KEY, pageNum)
+    }
+
+    suspend fun getTrailer(movieId:String): Trailer {
+        LoggerUtils.info(TAG,"getAllData")
+        return _apiService.getTrailer(movieId,Constants.API_KEY)
     }
 
     class HeaderInterceptor : Interceptor {

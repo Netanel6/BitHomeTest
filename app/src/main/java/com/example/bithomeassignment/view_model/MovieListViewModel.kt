@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.bithomeassignment.models.Movie
+import com.example.bithomeassignment.models.Trailer
 import com.example.bithomeassignment.repository.IDataRepository
 import com.example.bithomeassignment.repository.ISettingsRepository
 import com.example.bithomeassignment.utils.LoggerUtils
@@ -29,6 +30,7 @@ class MovieListViewModel(_dataRepository: IDataRepository, _settingsRepository: 
     private val _hasInternet = MutableLiveData(true)
     private val _pageNum = MutableLiveData(1)
     var _movieList = MutableLiveData<List<Movie>>()
+    var _trailer = MutableLiveData<Trailer>()
     val _movie = MutableLiveData<Movie>()
 
     // Sets the network state of the internet
@@ -106,4 +108,9 @@ class MovieListViewModel(_dataRepository: IDataRepository, _settingsRepository: 
         return _movie
     }
 
+    fun getTrailer(movieId:String){
+        viewModelScope.launch {
+            _trailer.value  = dataRepository.getTrailer(movieId)
+        }
+    }
 }

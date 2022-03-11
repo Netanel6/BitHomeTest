@@ -1,7 +1,5 @@
 package com.example.bithomeassignment.network
 
-import com.example.bithomeassignment.R
-
 /**
  * Created by Netanel Amar on 07/03/2022.
  * NetanelCA2@gmail.com
@@ -14,8 +12,10 @@ class Constants {
         const val BASE_URL = "https://api.themoviedb.org/3/"
         const val IMAGE_PATH = "https://image.tmdb.org/t/p/original/"
         const val LATEST = "discover/movie?"
+        const val YOUTUBE_TRAILER_PATH = "https://www.youtube.com/watch?v="
         const val TOP_RATED = "movie/top_rated?language=en-US"
         const val UPCOMING = "movie/upcoming?language=en-US"
         const val NOW_PLAYING = "movie/now_playing?language=en-US"
     }
+
 }

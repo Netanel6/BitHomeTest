@@ -2,10 +2,9 @@ package com.example.bithomeassignment.repository
 
 import NetworkManager
 import android.content.Context
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import com.example.bithomeassignment.models.Movie
 import com.example.bithomeassignment.models.MovieList
+import com.example.bithomeassignment.models.Trailer
 import com.example.bithomeassignment.repository.local_db.AppDatabase
 import com.example.bithomeassignment.utils.LoggerUtils
 
@@ -29,6 +28,10 @@ class DataRepository(context: Context, settingsRepository: SettingsRepository, n
 
     override suspend fun getAllMoviesFromServer(endPoint: String, pageNum: Int): MovieList {
         return _networkManager.getAllData(endPoint, pageNum)
+    }
+
+    override suspend fun getTrailer(movieId: String): Trailer {
+        return _networkManager.getTrailer(movieId)
     }
 
     override suspend fun addMovieToLocaldb(movie: Movie) {
