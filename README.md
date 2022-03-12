@@ -17,7 +17,7 @@ Every fragment in the app is being inherited from an abstract class with 4 metho
 
 ## Coroutines 
 To handle the data loading and saving I used Kotlin coroutines
-It is google’s library so we can agree that it isn’t a 3rd library all the way
+It is a google’s library so we can agree that it isn’t a 3rd library all the way (more explained below)
 
 ## NavigatinCotroller and BottomNavigationView
 The navigation of the app is through Navigation controller (nav_graph) & BottomNavigationView
