@@ -25,12 +25,12 @@ The navigation of the app is through Navigation controller (nav_graph) & BottomN
 2.The BottomNavigationView is to navigate and filter movies as required and to navigate to the saved movies
 
 ## Movies
-1.Saved movies being saved into room persistence local database
-2.The featured movies is being requested from the api and as long you will try to scroll down the view model will handle the page number increment and get more movies by increment the page number by 1 (Lazy loading)
+1.Saved movies is being saved into room persistence local database
+2.The featured movies is being requested from the api and as long you will try to scroll down the view model will handle the page number incrementation and get more movies by increment the page number by 1 (Lazy loading)
 
 ## Utils 
 Iv’e added some singleton classes (object) to prevent duplicates of code such as 
-1.LoggerUtils - manages all the logs, toasts and snacbars
+1.LoggerUtils - manages all the logs, toasts and snackbars
 2.AppUtils - manages all the data manipulation
 
 
