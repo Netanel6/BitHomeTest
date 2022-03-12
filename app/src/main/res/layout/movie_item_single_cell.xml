@@ -29,7 +29,6 @@
         app:layout_constraintLeft_toRightOf="@id/poster_cell"
         android:layout_marginStart="20dp"
         android:layout_marginTop="20dp"
-        android:text="The Spiderman"
         android:textSize="18sp"
         android:fontFamily="@font/assistant_bold"
         android:textColor="@color/text_color"
@@ -55,7 +54,7 @@
         android:id="@+id/avg_vote"
         android:layout_width="wrap_content"
         android:fontFamily="@font/assistant_semi_bold"
-        android:text="5.4"
+        android:textColor="@color/text_color"
         android:layout_height="wrap_content" />
 
 
