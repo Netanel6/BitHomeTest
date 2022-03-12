@@ -17,6 +17,7 @@ data class Movie(
     @ColumnInfo("backdrop_path")
     @SerializedName("backdrop_path")
     val backdropPath: String,
+    // See Converter class
     @TypeConverters(Converter::class)
     @ColumnInfo("genre_ids")
     @SerializedName("genre_ids")

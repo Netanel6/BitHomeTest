@@ -15,10 +15,11 @@ class SettingsRepository(context:Context?): ISettingsRepository {
     private val  TAG = this::class.simpleName.toString()
     private  val _sharedPref: SharedPreferences
 
+    // Example for how to save data to shared pref via AppSettingsHelper class
     override fun setIsRetrieved(isRetrieved:Boolean) {
         setIsDataRetrieved(_sharedPref, isRetrieved)
     }
-
+    // Example for how to retrieve data to shared pref via AppSettingsHelper class
     override fun isRetrieved():Boolean {
         return isDataRetrieved(_sharedPref)
     }

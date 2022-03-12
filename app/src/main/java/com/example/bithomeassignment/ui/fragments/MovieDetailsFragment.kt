@@ -48,9 +48,12 @@ class MovieDetailsFragment : BaseFragment(), View.OnClickListener {
         return _binding.root
     }
 
+    // Network state observer
     override fun observeNetworkState() {
         _movieListViewModel.getNetworkState().observe(this) { hasInternet ->
             _hasInternet = if (hasInternet) {
+                observeMovieDetails()
+                observeTrailer()
                 true
             } else {
                 LoggerUtils.snackBarError(_binding.root,getString(R.string.no_internet_connection))
@@ -73,28 +76,32 @@ class MovieDetailsFragment : BaseFragment(), View.OnClickListener {
     override fun onFragmentReady() {
         lifecycle.addObserver(_playerView);
         _playerView.enableAutomaticInitialization
-        observeMovieDetails()
-        observeTrailer()
+
     }
 
+    // Trailer server call observer
     private fun observeTrailer() {
         _movieListViewModel._trailer.observe(this) {
             if (it != null) {
-                _trailer = it.results[0].key
-                _playerView.visibility = View.VISIBLE
-                _playerView.addYouTubePlayerListener(object :
-                    AbstractYouTubePlayerListener() {
-                    override fun onReady(@NonNull youTubePlayer: YouTubePlayer) {
-                        youTubePlayer.loadVideo(_trailer!!, 0f)
-                        _openInBrowser.isEnabled = true
-                    }
-                })
+                if (it.results.isNotEmpty()) {
+                    _trailer = it.results[0].key
+                    _playerView.visibility = View.VISIBLE
+                    _playerView.addYouTubePlayerListener(object :
+                        AbstractYouTubePlayerListener() {
+                        override fun onReady(@NonNull youTubePlayer: YouTubePlayer) {
+                            youTubePlayer.loadVideo(_trailer!!, 0f)
+                            youTubePlayer.mute()
+                            _openInBrowser.isEnabled = true
+                        }
+                    })
+                }
                 _movieListViewModel._trailer.value = null
             }
         }
     }
 
 
+    // Gets the selected movie from MovieListFragment via onMovieClicked from the RecyclerView
     private fun observeMovieDetails() {
         _movieListViewModel.getSelectedMovie().observe(this) { movie ->
             if (movie != null) {
@@ -115,6 +122,7 @@ class MovieDetailsFragment : BaseFragment(), View.OnClickListener {
         _openInBrowser.setOnClickListener(this)
     }
 
+    // Opens the current trailer in web page
     private fun openTrailer() {
         try {
             val openTrailerIntent =

@@ -19,11 +19,13 @@ class NetworkManager {
     val TAG = this::class.simpleName.toString()
     private var _apiService: ApiService
 
+    // Suspend fun is added because I'm using coroutines
     suspend fun getAllData(endPoint:String, pageNum: Int): MovieList {
         LoggerUtils.info(TAG,"getAllData")
         return _apiService.getAllMovies(endPoint,Constants.API_KEY, pageNum)
     }
 
+    // Suspend fun is added because I'm using coroutines
     suspend fun getTrailer(movieId:String): Trailer {
         LoggerUtils.info(TAG,"getAllData")
         return _apiService.getTrailer(movieId,Constants.API_KEY)

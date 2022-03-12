@@ -46,16 +46,12 @@ class MovieListAdapter(
         holder.voteAvg.text = AppUtils.formatString(data = dataAtPosition.voteAverage.toString())
         if (!inFavorites){
             holder.favorite.setOnClickListener {
-                holder.favorite.setImageDrawable(AppCompatResources.getDrawable(activity, R.drawable.ic_favorite))
                 onItemClicked.onFavoriteClicked(dataAtPosition)
             }
-            holder.itemView.setOnClickListener {
-                onItemClicked.onMovieClicked(dataAtPosition)
-            }
-        }else{
-            holder.favorite.setImageDrawable(AppCompatResources.getDrawable(activity, R.drawable.ic_favorite))
         }
-
+        holder.itemView.setOnClickListener {
+            onItemClicked.onMovieClicked(dataAtPosition)
+        }
     }
 
     override fun getItemCount(): Int {

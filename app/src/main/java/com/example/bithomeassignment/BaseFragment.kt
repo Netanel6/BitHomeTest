@@ -12,9 +12,9 @@ abstract class BaseFragment : Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        observeNetworkState()
         initViews()
         initClicks()
+        observeNetworkState()
         onFragmentReady()
     }
 
@@ -22,6 +22,7 @@ abstract class BaseFragment : Fragment() {
     abstract fun initViews()
     abstract fun initClicks()
     abstract fun onFragmentReady()
+    // Gets the instance of main activity for all fragments
     val mainActivity: MainActivity
         get() = this.activity as MainActivity
 

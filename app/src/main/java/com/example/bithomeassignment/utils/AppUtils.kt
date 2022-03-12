@@ -23,13 +23,14 @@ object AppUtils {
         return formatter.format(calendar.time)
     }
 
+    // slide the view from its current position to above itself
     fun slideUp(view: View) {
         view.visibility = View.VISIBLE
         val animate = TranslateAnimation(
-            0F,  // fromXDelta
-            0F,  // toXDelta
+            0F,
+            0F,
             view.height.toFloat(),  // fromYDelta
-            0F) // toYDelta
+            0F)
         animate.duration = 500
         animate.fillAfter = true
         view.startAnimation(animate)
@@ -38,21 +39,23 @@ object AppUtils {
     // slide the view from its current position to below itself
     fun slideDown(view: View) {
         val animate = TranslateAnimation(
-            0F,  // fromXDelta
-            0F,  // toXDelta
-            0F,  // fromYDelta
-            view.height.toFloat()) // toYDelta
+            0F,
+            0F,
+            0F,
+            view.height.toFloat())
         animate.duration = 500
         animate.fillAfter = true
         view.startAnimation(animate)
     }
 
+    // Loading image and caches it
     fun loadImage(activity: MainActivity, imagePath: String, holder: ImageView) {
         Glide.with(activity).load(imagePath)
             .diskCacheStrategy(
-                DiskCacheStrategy.ALL).into(holder)
+                DiskCacheStrategy.AUTOMATIC).into(holder)
     }
 
+    // Formats string to add /10 to the current data
     fun formatString(data: String) :String{
         var formattedString = data
         formattedString = String.format("%s/10", data)

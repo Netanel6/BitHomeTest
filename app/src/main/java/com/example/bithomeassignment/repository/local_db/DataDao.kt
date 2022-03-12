@@ -16,9 +16,12 @@ import com.example.bithomeassignment.models.Movie
 @Dao
 interface DataDao {
 
-    @Query("SELECT * FROM movie")
+    // Queries the data by ascending title name
+    @Query("SELECT * FROM movie ORDER BY title ASC")
     fun getData():List<Movie>
 
+    // Insers the data to local db - also using onConflict if there
+    // is already the same data inside the db
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insert(data: Movie)
 }

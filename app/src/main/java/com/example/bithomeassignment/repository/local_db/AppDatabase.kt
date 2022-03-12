@@ -21,7 +21,6 @@ abstract class AppDatabase : RoomDatabase() {
 
     companion object{
         private var _instance: AppDatabase? = null
-
         fun getAppDatabase(context: Context): AppDatabase? {
             if (_instance == null) {
                 _instance = Room.databaseBuilder(

@@ -9,11 +9,13 @@ import android.net.NetworkRequest
 import android.util.Log
 import androidx.lifecycle.LiveData
 
+// Class that handles internet connection (WIFI or 4G)
 class ConnectionLiveData(context: Context) : LiveData<Boolean>() {
     private val TAG = this::class.simpleName.toString()
     private lateinit var networkCallback: ConnectivityManager.NetworkCallback
     private val cm = context.getSystemService(CONNECTIVITY_SERVICE) as ConnectivityManager
     private val validNetworks: MutableSet<Network> = HashSet()
+
 
     private fun checkValidNetworks() {
         postValue(validNetworks.size > 0)
@@ -32,7 +34,8 @@ class ConnectionLiveData(context: Context) : LiveData<Boolean>() {
     }
 
     private fun createNetworkCallback() = object : ConnectivityManager.NetworkCallback() {
-        
+
+        // Detects internet connection is available
         override fun onAvailable(network: Network) {
             Log.d(TAG, "onAvailable: $network")
             val networkCapabilities = cm.getNetworkCapabilities(network)
@@ -43,6 +46,7 @@ class ConnectionLiveData(context: Context) : LiveData<Boolean>() {
             checkValidNetworks()
         }
 
+        // Detects internet connection is lost
         override fun onLost(network: Network) {
             Log.d(TAG, "onLost: $network")
             validNetworks.remove(network)

@@ -14,6 +14,10 @@ import retrofit2.http.Url
 //interface to implement in Network manager to make the server call and retrieve the data
 interface ApiService {
 
+    //@Url is for adding part of string into the url
+    //@Path is for adding part of string after the url using encoded attr
+    //@Query is for adding part of string to the query after the url is added
+
     /**
      * Function to get all movies
      * */
@@ -25,7 +29,7 @@ interface ApiService {
     ): MovieList
 
   /**
-     * Function to get all movies
+     * Function to get trailer by movie id
      * */
     @GET("movie/{movie_id}/videos?")
     suspend fun getTrailer(

@@ -11,9 +11,7 @@ import com.example.bithomeassignment.repository.ISettingsRepository
 import com.example.bithomeassignment.utils.LoggerUtils
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers.IO
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 /**
  * Created by Netanel Amar on 07/03/2022.
@@ -24,14 +22,14 @@ class MovieListViewModel(_dataRepository: IDataRepository, _settingsRepository: 
     ViewModel() {
     private val TAG = this::class.simpleName.toString()
     private var dataRepository: IDataRepository = _dataRepository
-    private val settingsRepository: ISettingsRepository = _settingsRepository
-    private var _movieListScrollPosition = 0
+    var _movieListScrollPosition = MutableLiveData(0)
     val _loading = MutableLiveData(false)
-    private val _hasInternet = MutableLiveData(true)
-    private val _pageNum = MutableLiveData(1)
+    private val _hasInternet = MutableLiveData<Boolean>(null)
+    val _pageNum = MutableLiveData(1)
     var _movieList = MutableLiveData<List<Movie>>()
     var _trailer = MutableLiveData<Trailer>()
     val _movie = MutableLiveData<Movie>()
+    var _movieLoading = MutableLiveData(false)
 
     // Sets the network state of the internet
     fun setNetworkState(hasInternet: Boolean) {
@@ -44,22 +42,26 @@ class MovieListViewModel(_dataRepository: IDataRepository, _settingsRepository: 
     }
 
     //Method to retrieve movies from Server
-    fun getAllMoviesFromServer(endPoint: String, pageNum: Int) {
+    fun getAllMoviesFromServer(endPoint: String) {
         viewModelScope.launch {
-            _movieList.value = dataRepository.getAllMoviesFromServer(endPoint, pageNum).movies
+            _movieLoading.value = true
+            _movieList.value =
+                dataRepository.getAllMoviesFromServer(endPoint, _pageNum.value!!).movies
+            _movieLoading.value = false
+            LoggerUtils.info(TAG, "getAllMoviesFromServer")
         }
-        LoggerUtils.info(TAG, "getAllMoviesFromServer")
     }
 
     // Gets the next page of the current endPoint
     fun nextPage(currentEndPoint: String, layoutManager: LinearLayoutManager) {
         viewModelScope.launch {
-            if ((_movieListScrollPosition + 1) >= _pageNum.value!!) {
+            if ((_movieListScrollPosition.value?.plus(1))!! >= _pageNum.value!!) {
                 _loading.value = true
                 incrementPage()
                 //Appending page by one
                 if (_pageNum.value!! > 1) {
-                    val result = dataRepository.getAllMoviesFromServer(currentEndPoint,_pageNum.value!!)
+                    val result =
+                        dataRepository.getAllMoviesFromServer(currentEndPoint, _pageNum.value!!)
                     appendMovies(result.movies, layoutManager)
                 }
                 _loading.value = false
@@ -67,14 +69,20 @@ class MovieListViewModel(_dataRepository: IDataRepository, _settingsRepository: 
         }
     }
 
-   // Add new movies to the list when the user reaches the end of the recycler view
+    // Resets the page number when item from the menu is clicked
+    fun onNavMenuSelected(pageNum: Int, scrollPosition: Int) {
+        _pageNum.value = pageNum
+        _movieListScrollPosition.value = scrollPosition
+    }
+
+    // Add new movies to the list when the user reaches the end of the recycler view
     private fun appendMovies(movies: List<Movie>, linearLayoutManager: LinearLayoutManager) {
-       val current = ArrayList(_movieList.value!!)
+        val current = ArrayList(_movieList.value!!)
         current.addAll(movies)
-       this._movieList.value = current
-       _movieListScrollPosition += 1
-       linearLayoutManager.scrollToPosition(current.size - 24)
-   }
+        this._movieList.value = current
+        _movieListScrollPosition.value = _movieListScrollPosition.value?.plus(1)
+        linearLayoutManager.scrollToPosition(current.size - 25)
+    }
 
     // Increment the current page by 1
     private fun incrementPage() {
@@ -84,6 +92,7 @@ class MovieListViewModel(_dataRepository: IDataRepository, _settingsRepository: 
     // Saving movie to local DB
     fun addMovieToLocalDb(movie: Movie) {
         // Using IO dispatcher to prevent from UI locking and crashing the app or ANR
+        // -> IO is the ideal for handling data, there's also main to handle on the main thread or Default
         // ANR -> Application Not Responding
         CoroutineScope(IO).launch {
             dataRepository.addMovieToLocaldb(movie)
@@ -91,6 +100,7 @@ class MovieListViewModel(_dataRepository: IDataRepository, _settingsRepository: 
     }
 
     // Using IO dispatcher to prevent from UI locking and crashing the app or ANR
+    // -> IO is the ideal for handling data, there's also main to handle on the main thread or Default
     // ANR -> Application Not Responding
      fun getDataFromLocalDb() {
         CoroutineScope(IO).launch {

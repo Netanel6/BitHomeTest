@@ -1,12 +1,11 @@
 <resources>
-    <string name="app_name">BitHomeAssignment</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="app_name">Movie App</string>
     <string name="nav_home_text">Home</string>
     <string name="nav_top_rated">Top rated</string>
     <string name="nav_upcoming">Upcoming</string>
     <string name="nav_now_playing">Now playing</string>
     <string name="nav_saved">Saved</string>
-    <string name="no_internet_connection">Internet connection error</string>
+    <string name="no_internet_connection">Oops.. looks like you have no internet</string>
     <string name="open_in_browser">Open In YouTube</string>
+    <string name="add_movies_to_the_list_text">Add movies to the list</string>
 </resources>
