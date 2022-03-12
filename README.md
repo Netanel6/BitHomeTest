@@ -19,7 +19,7 @@ Every fragment in the app is being inherited from an abstract class with 4 metho
 To handle the data loading and saving I used Kotlin coroutines
 It is a google’s library so we can agree that it isn’t a 3rd library all the way (more explained below)
 
-## NavigatinCotroller and BottomNavigationView
+## NavigationController and BottomNavigationView
 The navigation of the app is through Navigation controller (nav_graph) & BottomNavigationView
 1.The navigation controller is to handle onItemClicked through the recycler with listener
 2.The BottomNavigationView is to navigate and filter movies as required and to navigate to the saved movies
