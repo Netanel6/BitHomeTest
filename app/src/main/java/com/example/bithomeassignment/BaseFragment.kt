@@ -12,14 +12,16 @@ abstract class BaseFragment : Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
+        observeNetworkState()
         initViews()
         initClicks()
         onFragmentReady()
     }
 
-    abstract fun onFragmentReady()
+    abstract fun observeNetworkState()
     abstract fun initViews()
     abstract fun initClicks()
+    abstract fun onFragmentReady()
     val mainActivity: MainActivity
         get() = this.activity as MainActivity
 

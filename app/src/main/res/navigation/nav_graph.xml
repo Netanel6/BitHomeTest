@@ -10,5 +10,32 @@
         android:id="@+id/movieListFragment"
         android:name="com.example.bithomeassignment.ui.fragments.MovieListFragment"
         android:label="fragment_movie_list"
-        tools:layout="@layout/fragment_movie_list" />
+        tools:layout="@layout/fragment_movie_list" >
+        <action
+            android:id="@+id/action_movieListFragment_to_movieDetailsFragment"
+            app:destination="@id/movieDetailsFragment"
+            app:enterAnim="@animator/slide_out_animation"
+            app:exitAnim="@animator/slide_in_animation"
+            />
+        <action
+            android:id="@+id/action_movieListFragment_self"
+            app:destination="@id/movieListFragment" />
+    </fragment>
+
+
+    <fragment
+        android:id="@+id/movieDetailsFragment"
+        android:name="com.example.bithomeassignment.ui.fragments.MovieDetailsFragment"
+        android:label="fragment_movie_details"
+        tools:layout="@layout/fragment_movie_details" >
+        <action
+            android:id="@+id/action_movieDetailsFragment_to_movieListFragment"
+            app:destination="@id/movieListFragment"
+            app:enterAnim="@animator/enter_animation"
+            app:exitAnim="@animator/exit_animation"/>
+    </fragment>
 </navigation>
+
+<!--        app:enterAnim="@animator/enter_animation"
+            app:exitAnim="@animator/exit_animation"\
+            -->

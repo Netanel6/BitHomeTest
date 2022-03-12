@@ -3,58 +3,114 @@ package com.example.bithomeassignment.view_model
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.bithomeassignment.models.Movie
+import com.example.bithomeassignment.models.Trailer
 import com.example.bithomeassignment.repository.IDataRepository
 import com.example.bithomeassignment.repository.ISettingsRepository
 import com.example.bithomeassignment.utils.LoggerUtils
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers.IO
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 /**
  * Created by Netanel Amar on 07/03/2022.
  * NetanelCA2@gmail.com
  */
 //app viewModel
-class MovieListViewModel(var dataRepository: IDataRepository, _settingsRepository: ISettingsRepository) :
+class MovieListViewModel(_dataRepository: IDataRepository, _settingsRepository: ISettingsRepository) :
     ViewModel() {
     private val TAG = this::class.simpleName.toString()
-    private var settingsRepository:ISettingsRepository = _settingsRepository
+    private var dataRepository: IDataRepository = _dataRepository
+    private val settingsRepository: ISettingsRepository = _settingsRepository
+    private var _movieListScrollPosition = 0
+    val _loading = MutableLiveData(false)
+    private val _hasInternet = MutableLiveData(true)
+    private val _pageNum = MutableLiveData(1)
     var _movieList = MutableLiveData<List<Movie>>()
+    var _trailer = MutableLiveData<Trailer>()
+    val _movie = MutableLiveData<Movie>()
+
+    // Sets the network state of the internet
+    fun setNetworkState(hasInternet: Boolean) {
+        this._hasInternet.value = hasInternet
+    }
+
+    // Gets the network state of the internet
+    fun getNetworkState(): MutableLiveData<Boolean> {
+        return _hasInternet
+    }
 
     //Method to retrieve movies from Server
-    fun getAllMoviesFromServer(pageNum:Int) {
+    fun getAllMoviesFromServer(endPoint: String, pageNum: Int) {
         viewModelScope.launch {
-            _movieList.value = dataRepository.getAllMoviesFromServer(pageNum).movies
+            _movieList.value = dataRepository.getAllMoviesFromServer(endPoint, pageNum).movies
         }
-        LoggerUtils.info(TAG,"getMoviesByPopularityFromServer")
-
+        LoggerUtils.info(TAG, "getAllMoviesFromServer")
     }
 
-    //Method to retrieve movies from Server by top rated
-    fun getMoviesByTopRatedFromServer(pageNum:Int) {
+    // Gets the next page of the current endPoint
+    fun nextPage(currentEndPoint: String, layoutManager: LinearLayoutManager) {
         viewModelScope.launch {
-            _movieList.value = dataRepository.getMoviesByTopRatedFromServer(pageNum).movies
+            if ((_movieListScrollPosition + 1) >= _pageNum.value!!) {
+                _loading.value = true
+                incrementPage()
+                //Appending page by one
+                if (_pageNum.value!! > 1) {
+                    val result = dataRepository.getAllMoviesFromServer(currentEndPoint,_pageNum.value!!)
+                    appendMovies(result.movies, layoutManager)
+                }
+                _loading.value = false
+            }
         }
-        LoggerUtils.info(TAG,"getMoviesByPopularityFromServer")
-
     }
 
-    //Method to retrieve movies from Server by upcoming
-    fun getMoviesByUpcomingFromServer(pageNum:Int) {
-        viewModelScope.launch {
-            _movieList.value = dataRepository.getMoviesByUpcomingFromServer(pageNum).movies
-        }
-        LoggerUtils.info(TAG,"getMoviesByUpcomingFromServer")
+   // Add new movies to the list when the user reaches the end of the recycler view
+    private fun appendMovies(movies: List<Movie>, linearLayoutManager: LinearLayoutManager) {
+       val current = ArrayList(_movieList.value!!)
+        current.addAll(movies)
+       this._movieList.value = current
+       _movieListScrollPosition += 1
+       linearLayoutManager.scrollToPosition(current.size - 24)
+   }
 
+    // Increment the current page by 1
+    private fun incrementPage() {
+        _pageNum.value = _pageNum.value?.plus(1)
     }
 
-    //Method to retrieve data from Server
-    fun getMoviesByNowPlayingFromServer(startReleaseDate:String, endReleaseDate:String) {
-        viewModelScope.launch {
-            // TODO: Change to start date and end date dynamically
-            _movieList.value = dataRepository.getMoviesByNowPlayingFromServer(startReleaseDate,endReleaseDate).movies
+    // Saving movie to local DB
+    fun addMovieToLocalDb(movie: Movie) {
+        // Using IO dispatcher to prevent from UI locking and crashing the app or ANR
+        // ANR -> Application Not Responding
+        CoroutineScope(IO).launch {
+            dataRepository.addMovieToLocaldb(movie)
         }
-        LoggerUtils.info(TAG,"getMoviesByNowPlayingFromServer")
-
     }
 
+    // Using IO dispatcher to prevent from UI locking and crashing the app or ANR
+    // ANR -> Application Not Responding
+     fun getDataFromLocalDb() {
+        CoroutineScope(IO).launch {
+            _movieList.postValue(dataRepository.getMoviesFromLocalDb())
+        }
+    }
+
+    // Sets the selected movie for details fragment
+    fun setSelectedMovie(movie: Movie) {
+        this._movie.value = movie
+    }
+
+    // Gets the selected movie for details fragment
+    fun getSelectedMovie(): MutableLiveData<Movie> {
+        return _movie
+    }
+
+    fun getTrailer(movieId:String){
+        viewModelScope.launch {
+            _trailer.value  = dataRepository.getTrailer(movieId)
+        }
+    }
 }
