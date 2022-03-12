@@ -16,13 +16,12 @@ abstract class BaseFragment : Fragment() {
         initViews()
         initClicks()
         onFragmentReady()
-
     }
 
     abstract fun observeNetworkState()
-    abstract fun onFragmentReady()
     abstract fun initViews()
     abstract fun initClicks()
+    abstract fun onFragmentReady()
     val mainActivity: MainActivity
         get() = this.activity as MainActivity
 
