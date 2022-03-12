@@ -16,8 +16,7 @@ Every fragment in the app is being inherited from an abstract class with 4 metho
 4.onFragmentReady - all the other methods inside the class
 
 ### Coroutines 
-To handle the data loading and saving I used Kotlin coroutines
-It is a google’s library so we can agree that it isn’t a 3rd library all the way (more explained below)
+To handle the data loading and saving I used Kotlin coroutines multithreading asynchronous work(more explained below)
 
 ### NavigationController and BottomNavigationView
 The navigation of the app is through Navigation controller (nav_graph) & BottomNavigationView
@@ -46,7 +45,7 @@ It is convenient and minimizes boiler-plate-code - part of jetpack library
 
 ### Coroutines 
 is a very simple yet robust library to handle multithreading jobs on the worker thread it is more efficient and prevents ANRs and ui locks.
-The main reason is that a coroutine can start on a certain thread and finish the job on a different thread unlike java threading or executer where you assign number of thread to the app. Meaning you can assign many coroutines scopes as you want and don’t block the parallel work in the background
+The main reason is that a coroutine can start on a certain thread and finish the job on a different thread unlike java threading or executer where you assign number of thread to the app. Meaning you can assign many coroutines scopes as you want and don’t block the parallel work in the background - part of jetpack library
 
 ### Retrofit
 I used retrofit because every app  I maintained or developed Iv’e seen retrofit was being used
