@@ -3,7 +3,7 @@
 
 # General architecture of the application.
 
-## Archtecture
+## Architecture
 The main architecture oh the application Iv’e developed is MVVM.
 Model-View-ViewModel, with Data & Settings repository to handle the data and settings all over the app dynamically. 
 Once the app is opened we are getting only one instance for these classes (along with ConnectionLiveData class to get the state of the internet)
