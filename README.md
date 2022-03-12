@@ -38,23 +38,23 @@ Iv’e added some singleton classes (object) to prevent duplicates of code such 
 
 ## MVVM 
 is the most common app building architeture.
-using the observer classes and and live data objects we can get the data and observe changes in live and update them in the view instantly. - part of jetpack library
+using the observer and and live data objects we can get the data and observe changes in live and update them in the view instantly. - part of jetpack library
 
 ## Room persistence local db 
 is the most common data storing library that works synchronously with SQL queries using annotations 
-It is convenient and minimizes boiler-plate-code - part of jet pack library
+It is convenient and minimizes boiler-plate-code - part of jetpack library
 
 ## Coroutines 
-is a very simple yet robust library to handle multithreading jobs on the worker thread it is more efficient.
+is a very simple yet robust library to handle multithreading jobs on the worker thread it is more efficient and prevents ANRs and ui locks.
 The main reason is that a coroutine can start on a certain thread and finish the job on a different thread unlike java threading or executer where you assign number of thread to the app. Meaning you can assign many coroutines scopes as you want and don’t block the parallel work in the background
 
 ## Retrofit
 I used retrofit because every app  I maintained or developed Iv’e seen retrofit was being used
-It is common and easy library for rest API’s  for java an kotlin software developing language. The library provides a powerful framework for authenticating and interacting with APIs and sending network requests with OkHttp. 
+It is a common and easy library for rest API’s  for java and kotlin software developing language. The library provides a powerful framework for authenticating and interacting with APIs and sending network requests with OkHttp with API keys or bearer tokesns- I used API key but I know how to handle Bearer tokens with Base64 convertion. 
 
 ## Singleton 
 for some parts of the code it’s the easiest way to write one dynamic with one instance for the app’s lifecycle to get the job done 
-One example from the app is to place an image inside its’ holder once in the recycler view’s image view and the other  in the image view in movie details fragment
+One example from the app is to place an image inside its’ holder once in the recycler view’s image view and the other in the image view in movie details fragment
 Singleton one of many design patterns helping us building the app (more examples are: observer, builder, adapter etc.)
 
 ## Adapter
@@ -63,9 +63,9 @@ The main reason I decided to use recycler view adapter is because it can wrap th
 1.LinearLayoutManager shows items in a vertical or horizontal scrolling list.
 2.GridLayoutManager shows items in a grid.
 3.StaggeredGridLayoutManager shows items in a staggered grid.
-
+Recycler view is the inheriter of list and grid view.
 
 # Features you didn't implement. This can also include details about how you would implement things differently if you were to spend more time on the assignment or if it was for production use.
 
-I know about one thing I didn’t have time or enough Exposure time and I really want to learn is Hilt Dependency Injection.
-I know that I could have been used it in the app to inject instances all over the app, nstead of returning instances from the main activity and “Inject manually” I know I could use Hilt 
+I know about one thing I didn’t have time or enough exposure time and I really want to learn is Hilt Dependency Injection.
+I know that I could have been used it in the app to inject instances all over the app, instead of returning instances from the main activity and “Inject manually” I know I could use Hilt 
