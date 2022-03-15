@@ -17,17 +17,22 @@ import com.example.bithomeassignment.models.Movie
 abstract class AppDatabase : RoomDatabase() {
     private val TAG = this::class.java.simpleName
 
-    abstract fun getMovieDao() : DataDao
+    abstract fun getMovieDao(): DataDao
 
-    companion object{
-        private var _instance: AppDatabase? = null
-        fun getAppDatabase(context: Context): AppDatabase? {
-            if (_instance == null) {
-                _instance = Room.databaseBuilder(
-                    context.applicationContext,
-                    AppDatabase::class.java, "app-database").fallbackToDestructiveMigration().build()
+    companion object {
+        @Volatile
+        private var instance: AppDatabase? = null
+
+        fun getDatabase(context: Context): AppDatabase =
+            instance ?: synchronized(this) {
+                instance ?: buildDatabase(context).also {
+                    instance = it
+                }
             }
-            return _instance
-        }
+
+        private fun buildDatabase(appContext: Context) =
+            Room.databaseBuilder(appContext, AppDatabase::class.java, "app-database")
+                .fallbackToDestructiveMigration()
+                .build()
     }
 }

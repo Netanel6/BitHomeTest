@@ -12,10 +12,10 @@ import com.example.bithomeassignment.repository.ISettingsRepository
 class AppViewModelFactory(
     private val iDataRepository: IDataRepository,
     private val iSettingsRepository: ISettingsRepository,
-) :
-    NewInstanceFactory() {
-    private val TAG = this::class.java.simpleName
-    override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-        return MovieListViewModel(iDataRepository, iSettingsRepository) as T
-    }
-}
+)
+//    NewInstanceFactory() {
+//    private val TAG = this::class.java.simpleName
+//    override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+//        return MovieListViewModel(iDataRepository, iSettingsRepository) as T
+//    }
+//}

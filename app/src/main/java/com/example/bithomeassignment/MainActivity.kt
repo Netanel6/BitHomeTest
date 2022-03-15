@@ -1,39 +1,37 @@
 package com.example.bithomeassignment
 
-import NetworkManager
 import android.os.Bundle
 import android.view.MenuItem
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import androidx.navigation.ui.setupWithNavController
 import com.example.bithomeassignment.databinding.ActivityMainBinding
 import com.example.bithomeassignment.network.Constants
-import com.example.bithomeassignment.repository.DataRepository
-import com.example.bithomeassignment.repository.SettingsRepository
 import com.example.bithomeassignment.utils.AppUtils
 import com.example.bithomeassignment.utils.LoggerUtils
-import com.example.bithomeassignment.view_model.AppViewModelFactory
 import com.example.bithomeassignment.view_model.MovieListViewModel
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.navigation.NavigationBarView
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 
 /**
  * Created by Netanel Amar on 07/03/2022.
  * NetanelCA2@gmail.com
  */
+
+@AndroidEntryPoint
 class MainActivity : AppCompatActivity(), NavigationBarView.OnItemSelectedListener {
+    @Inject
+    lateinit var _movieListViewModel: MovieListViewModel
     private val TAG = this::class.java.simpleName
     private lateinit var _binding: ActivityMainBinding
     private var onNavItemSelected: OnNavItemSelected? = null
     private lateinit var bottomNavView: BottomNavigationView
     private lateinit var _navigationController: NavController
-    private lateinit var _dataRepository: DataRepository
-    private lateinit var _settingsRepository: SettingsRepository
-    private lateinit var _movieListViewModel: MovieListViewModel
     private lateinit var _connectionLiveData: ConnectionLiveData
     private var _hasInternet: Boolean? = false
 
@@ -46,12 +44,6 @@ class MainActivity : AppCompatActivity(), NavigationBarView.OnItemSelectedListen
 
     // Initialization of the Application settings
     private fun initAppSettings() {
-        _settingsRepository = SettingsRepository(this)
-        _dataRepository = DataRepository(this, _settingsRepository, NetworkManager())
-        val factory = AppViewModelFactory(_dataRepository, _settingsRepository)
-        _movieListViewModel = ViewModelProvider(this,
-            (factory as ViewModelProvider.Factory))[MovieListViewModel::class.java]
-
         _connectionLiveData = ConnectionLiveData(this)
         _connectionLiveData.observe(this) { hasInternet ->
             if (hasInternet != null) {
@@ -94,11 +86,6 @@ class MainActivity : AppCompatActivity(), NavigationBarView.OnItemSelectedListen
     // Function to get viewModel to whole over the app with one instance
     fun getMovieListViewModel(): MovieListViewModel {
         return _movieListViewModel
-    }
-
-    // Function to get settingsRepository to whole over the app with one instance
-    fun getSettingsRepository(): SettingsRepository {
-        return _settingsRepository
     }
 
     // Function to add fragment with or without bundle

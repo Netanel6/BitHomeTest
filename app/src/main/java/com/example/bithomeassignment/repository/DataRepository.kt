@@ -1,46 +1,43 @@
 package com.example.bithomeassignment.repository
 
 import NetworkManager
-import android.content.Context
 import com.example.bithomeassignment.models.Movie
 import com.example.bithomeassignment.models.MovieList
 import com.example.bithomeassignment.models.Trailer
-import com.example.bithomeassignment.repository.local_db.AppDatabase
-import com.example.bithomeassignment.utils.LoggerUtils
+import com.example.bithomeassignment.network.ApiService
+import com.example.bithomeassignment.network.Constants
+import com.example.bithomeassignment.repository.local_db.DataDao
+import javax.inject.Inject
 
 /**
  * Created by Netanel Amar on 07/03/2022.
  * NetanelCA2@gmail.com
  */
 //Class to handle data all over the app
-class DataRepository(context: Context, settingsRepository: SettingsRepository, networkManager: NetworkManager) : IDataRepository {
+class DataRepository @Inject constructor(
+    private val networkManager: ApiService,
+    private val dataDao: DataDao,
+) {
     val TAG = this::class.java.simpleName.toString()
-    private var _database: AppDatabase
-    private val _settingsRepository: SettingsRepository
-    private var _networkManager: NetworkManager
 
+    // Suspend fun is added because I'm using coroutines
+    suspend fun getAllMoviesFromServer(endPoint: String, pageNum: Int): MovieList {
+        return networkManager.getAllMovies(endPoint, Constants.API_KEY, pageNum)
+    }
 
-    init {
-        LoggerUtils.info(TAG, "Initializing DataRepository..")
-        _database = AppDatabase.getAppDatabase(context)!!
-        _settingsRepository = settingsRepository
-        _networkManager = networkManager
-    }
     // Suspend fun is added because I'm using coroutines
-    override suspend fun getAllMoviesFromServer(endPoint: String, pageNum: Int): MovieList {
-        return _networkManager.getAllData(endPoint, pageNum)
+    suspend fun getTrailer(movieId: String): Trailer {
+        return networkManager.getTrailer(movieId,Constants.API_KEY)
     }
+
     // Suspend fun is added because I'm using coroutines
-    override suspend fun getTrailer(movieId: String): Trailer {
-        return _networkManager.getTrailer(movieId)
+    suspend fun addMovieToLocaldb(movie: Movie) {
+        dataDao.insert(movie)
     }
+
     // Suspend fun is added because I'm using coroutines
-    override suspend fun addMovieToLocaldb(movie: Movie) {
-        _database.getMovieDao().insert(movie)
-    }
-    // Suspend fun is added because I'm using coroutines
-    override suspend fun getMoviesFromLocalDb(): List<Movie> {
-        return _database.getMovieDao().getData()
+    suspend fun getMoviesFromLocalDb(): List<Movie> {
+        return dataDao.getData()
     }
 
 }

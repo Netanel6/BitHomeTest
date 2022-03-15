@@ -6,22 +6,23 @@ import androidx.lifecycle.viewModelScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.bithomeassignment.models.Movie
 import com.example.bithomeassignment.models.Trailer
-import com.example.bithomeassignment.repository.IDataRepository
-import com.example.bithomeassignment.repository.ISettingsRepository
+import com.example.bithomeassignment.repository.DataRepository
 import com.example.bithomeassignment.utils.LoggerUtils
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 /**
  * Created by Netanel Amar on 07/03/2022.
  * NetanelCA2@gmail.com
  */
 //app viewModel
-class MovieListViewModel(_dataRepository: IDataRepository, _settingsRepository: ISettingsRepository) :
+@HiltViewModel
+class MovieListViewModel @Inject constructor(private val dataRepository: DataRepository) :
     ViewModel() {
     private val TAG = this::class.simpleName.toString()
-    private var dataRepository: IDataRepository = _dataRepository
     var _movieListScrollPosition = MutableLiveData(0)
     val _loading = MutableLiveData(false)
     private val _hasInternet = MutableLiveData<Boolean>(null)
